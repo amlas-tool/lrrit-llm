@@ -44,12 +44,12 @@ lrrit-llm/
 │
 ├── src/
 │   └── lrrit_llm/
-│       ├── agents/                 # Dimension-specific agents
-│       │   ├── d1_compassion.py    # D1: Compassionate engagement
-│       │   ├── d2_systems.py       # D2: Systems approach
-│       │   ├── d3_learning_actions.py
-│       │   ├── d4_blame.py         # D4: Blame language avoided
-│       │   └── *.md                # Agent design notes
+│       ├── agents/                       # Dimension-specific agents
+│       │   ├── d1_compassion.py          # D1: Compassionate engagement
+│       │   ├── d2_systems.py             # D2: Systems approach
+│       │   ├── d3_learning_actions.py    # D3: Human error / learning actions
+│       │   ├── d4_blame.py               # D4: Blame language avoided
+│       │   └── *.md                      # Agent design notes
 │       │
 │       ├── ingest/
 │       │   ├── pdf_text.py         # Text extraction (PyMuPDF)
