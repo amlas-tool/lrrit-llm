@@ -45,11 +45,13 @@ lrrit-llm/
 ├── src/
 │   └── lrrit_llm/
 │       ├── agents/                       # Dimension-specific agents
+│           ├── profiles/                 # Agent profiles in mark down (reference only)
+│       │      └── *.md                      # Agent design notes
 │       │   ├── d1_compassion.py          # D1: Compassionate engagement
 │       │   ├── d2_systems.py             # D2: Systems approach
 │       │   ├── d3_learning_actions.py    # D3: Human error / learning actions
 │       │   ├── d4_blame.py               # D4: Blame language avoided
-│       │   └── *.md                      # Agent design notes
+│       │   
 │       │
 │       ├── ingest/
 │       │   ├── pdf_text.py         # Text extraction (PyMuPDF)
@@ -63,7 +65,7 @@ lrrit-llm/
 │           └── openai_client.py    # LLM client wrapper
 │
 ├── scripts/
-│   ├── test_d1_d4.py               # Example runner (D1 + D4)
+│   ├── test_d1_d4.py               # Example runner (D1 to D4)
 │   └── render_results_html.py      # Render agent results to HTML
 │
 ├── data/
