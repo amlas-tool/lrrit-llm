@@ -92,7 +92,7 @@ A structured, auditable container holding:
 - extracted tables (when present)
 - stable hashes for traceability
 
-All agents operate **only** on the EvidencePack.
+All agents operate **only** on the EvidencePack.   
 
 ## PDF parsing and evidence extraction
 

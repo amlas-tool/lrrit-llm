@@ -4,7 +4,7 @@ import os
 import json
 from pathlib import Path
 
-from lrrit_llm.agents.d3_learning_actions import D3LearningActionsAgent
+
 from lrrit_llm.evidence import pack
 from lrrit_llm.ingest.pdf_text import extract_text_pages
 from lrrit_llm.ingest.pdf_tables import extract_tables_from_pdf
@@ -15,7 +15,7 @@ from lrrit_llm.agents.d1_compassion import D1CompassionAgent
 from lrrit_llm.agents.d2_systems import D2SystemsApproachAgent
 from lrrit_llm.agents.d3_learning_actions import D3LearningActionsAgent
 from lrrit_llm.agents.d4_blame import D4BlameLanguageAgent
-
+from lrrit_llm.agents.d5_local_rationality import D5LocalRationalityAgent
 
 def main():
     # ---- CONFIG ----
@@ -64,7 +64,7 @@ def main():
     print(f"Saved EvidencePack: {pack_path}")
 
     # ---- RUN AGENTS ----
-    print("[4/4] Running agents (D1,D2,D3,D4...)")
+    print("[4/4] Running agents (D1,D2,D3,D4,D5...)")
     client = OpenAIChatClient(
         model=os.environ.get("OPENAI_MODEL", "gpt-4o-mini"),
         temperature=0.0,
@@ -74,13 +74,15 @@ def main():
     d2 = D2SystemsApproachAgent(client)
     d3 = D3LearningActionsAgent(client)
     d4 = D4BlameLanguageAgent(client)
+    d5 = D5LocalRationalityAgent(client)
 
     d1_out = d1.run(pack)
     d2_out = d2.run(pack)
     d3_out = d3.run(pack)
     d4_out = d4.run(pack)
+    d5_out = d5.run(pack)
 
-    results = {"d1": d1_out, "d2": d2_out, "d3": d3_out, "d4": d4_out}
+    results = {"d1": d1_out, "d2": d2_out, "d3": d3_out, "d4": d4_out, "d5": d5_out}
     results_path = out_dir / "agent_results.json"
     results_path.write_text(
         json.dumps(results, ensure_ascii=False, indent=2),

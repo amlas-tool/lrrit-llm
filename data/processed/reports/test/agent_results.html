@@ -149,7 +149,7 @@
   <header>
     <div class="wrap">
       <div style="font-size:22px;font-weight:900;">LRRIT Agent Results</div>
-      <div style="opacity:0.9;margin-top:4px;">Report: test • Generated: 2026-01-27 09:53</div>
+      <div style="opacity:0.9;margin-top:4px;">Report: test • Generated: 2026-01-27 16:36</div>
     </div>
   </header>
 
@@ -250,7 +250,7 @@
 
           <div class="card-body">
             <h3>Rationale</h3>
-            <p>The response includes some systems-level analysis, particularly regarding transfer processes and escalation pathways, but also emphasizes individual actions.</p>
+            <p>The response includes some systems framing, particularly regarding transfer protocols and escalation pathways, but also emphasizes individual learning.</p>
 
             <h3>Evidence</h3>
             
@@ -259,7 +259,7 @@
                     <span class="pill" style="background:#007F3B">positive</span>
                     <span class="ev-id">Text p02_c01</span>
                   </div>
-                  <div class="ev-quote">“No known systematic way to ensure that X-ray results are properly escalated for further review.”</div>
+                  <div class="ev-quote">“For patients in ED or SDEC who are acutely unwell and require urgent surgical intervention, transfer to be made to the site where the surgeons are.”</div>
                 </div>
                 
                 <div class="ev-row">
@@ -275,11 +275,11 @@
               <summary>Raw model output</summary>
               <pre>{
   &quot;rating&quot;: &quot;SOME&quot;,
-  &quot;rationale&quot;: &quot;The response includes some systems-level analysis, particularly regarding transfer processes and escalation pathways, but also emphasizes individual actions.&quot;,
+  &quot;rationale&quot;: &quot;The response includes some systems framing, particularly regarding transfer protocols and escalation pathways, but also emphasizes individual learning.&quot;,
   &quot;evidence&quot;: [
     {
       &quot;id&quot;: &quot;Text p02_c01&quot;,
-      &quot;quote&quot;: &quot;No known systematic way to ensure that X-ray results are properly escalated for further review.&quot;,
+      &quot;quote&quot;: &quot;For patients in ED or SDEC who are acutely unwell and require urgent surgical intervention, transfer to be made to the site where the surgeons are.&quot;,
       &quot;evidence_type&quot;: &quot;positive&quot;
     },
     {
@@ -417,6 +417,70 @@
     }
   ],
   &quot;uncertainty&quot;: false
+}</pre>
+            </details>
+          </div>
+        </section>
+        
+        <section class="card">
+          <div class="card-head">
+            <div>
+              <div class="agent-title">D5 — Local rationality</div>
+              <div class="muted">Key: positive = supports dimension, negative = contrary/weakening evidence</div>
+            </div>
+            <div class="badges">
+              <div class="badge">
+                <div class="badge-label">Rating</div>
+                <div class="pill" style="background:#FFB81C">SOME</div>
+              </div>
+              <div class="badge">
+                <div class="badge-label">Uncertainty</div>
+                <div class="pill" style="background:#007F3B">YES</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-body">
+            <h3>Rationale</h3>
+            <p>The response provides some context regarding the decision-making process, but it lacks a comprehensive explanation of the contemporaneous reasoning behind actions taken.</p>
+
+            <h3>Evidence</h3>
+            
+                <div class="ev-row">
+                  <div class="ev-meta">
+                    <span class="pill" style="background:#007F3B">positive</span>
+                    <span class="ev-id">Text p02_c01</span>
+                  </div>
+                  <div class="ev-quote">“Based on presenting symptoms of abdominal pain, vomiting and raised CRP - obstruction to be considered as a possible differential diagnosis.”</div>
+                </div>
+                
+                <div class="ev-row">
+                  <div class="ev-meta">
+                    <span class="pill" style="background:#D5281B">negative</span>
+                    <span class="ev-id">Text p03_c01</span>
+                  </div>
+                  <div class="ev-quote">“There is no certainty that an earlier CT would have made a difference as we cannot determine at what point the patient perforated.”</div>
+                </div>
+                
+
+            <details class="raw">
+              <summary>Raw model output</summary>
+              <pre>{
+  &quot;rating&quot;: &quot;SOME&quot;,
+  &quot;rationale&quot;: &quot;The response provides some context regarding the decision-making process, but it lacks a comprehensive explanation of the contemporaneous reasoning behind actions taken.&quot;,
+  &quot;evidence&quot;: [
+    {
+      &quot;id&quot;: &quot;Text p02_c01&quot;,
+      &quot;quote&quot;: &quot;Based on presenting symptoms of abdominal pain, vomiting and raised CRP - obstruction to be considered as a possible differential diagnosis.&quot;,
+      &quot;evidence_type&quot;: &quot;positive&quot;
+    },
+    {
+      &quot;id&quot;: &quot;Text p03_c01&quot;,
+      &quot;quote&quot;: &quot;There is no certainty that an earlier CT would have made a difference as we cannot determine at what point the patient perforated.&quot;,
+      &quot;evidence_type&quot;: &quot;negative&quot;
+    }
+  ],
+  &quot;uncertainty&quot;: true
 }</pre>
             </details>
           </div>

@@ -23,11 +23,11 @@
     "agent_id": "D2",
     "dimension": "Systems approach to contributory factors",
     "rating": "SOME",
-    "rationale": "The response includes some systems-level analysis, particularly regarding transfer processes and escalation pathways, but also emphasizes individual actions.",
+    "rationale": "The response includes some systems framing, particularly regarding transfer protocols and escalation pathways, but also emphasizes individual learning.",
     "evidence": [
       {
         "id": "Text p02_c01",
-        "quote": "No known systematic way to ensure that X-ray results are properly escalated for further review.",
+        "quote": "For patients in ED or SDEC who are acutely unwell and require urgent surgical intervention, transfer to be made to the site where the surgeons are.",
         "evidence_type": "positive"
       },
       {
@@ -37,7 +37,7 @@
       }
     ],
     "uncertainty": false,
-    "raw_output": "{\n  \"rating\": \"SOME\",\n  \"rationale\": \"The response includes some systems-level analysis, particularly regarding transfer processes and escalation pathways, but also emphasizes individual actions.\",\n  \"evidence\": [\n    {\n      \"id\": \"Text p02_c01\",\n      \"quote\": \"No known systematic way to ensure that X-ray results are properly escalated for further review.\",\n      \"evidence_type\": \"positive\"\n    },\n    {\n      \"id\": \"Text p03_c01\",\n      \"quote\": \"SHO can use case for personal reflection/appraisal.\",\n      \"evidence_type\": \"negative\"\n    }\n  ],\n  \"uncertainty\": false\n}"
+    "raw_output": "{\n  \"rating\": \"SOME\",\n  \"rationale\": \"The response includes some systems framing, particularly regarding transfer protocols and escalation pathways, but also emphasizes individual learning.\",\n  \"evidence\": [\n    {\n      \"id\": \"Text p02_c01\",\n      \"quote\": \"For patients in ED or SDEC who are acutely unwell and require urgent surgical intervention, transfer to be made to the site where the surgeons are.\",\n      \"evidence_type\": \"positive\"\n    },\n    {\n      \"id\": \"Text p03_c01\",\n      \"quote\": \"SHO can use case for personal reflection/appraisal.\",\n      \"evidence_type\": \"negative\"\n    }\n  ],\n  \"uncertainty\": false\n}"
   },
   "d3": {
     "agent_id": "D3",
@@ -78,5 +78,25 @@
     ],
     "uncertainty": false,
     "raw_output": "{\n  \"rating\": \"GOOD\",\n  \"rationale\": \"The learning response avoids blame-oriented language and focuses on systemic issues rather than attributing fault to individuals.\",\n  \"evidence\": [\n    {\n      \"id\": \"Text p03_c01\",\n      \"quote\": \"There is no certainty that an earlier CT would have made a difference\",\n      \"evidence_type\": \"positive\"\n    },\n    {\n      \"id\": \"Text p02_c01\",\n      \"quote\": \"No known systematic way to ensure that X-ray results are properly escalated for further review.\",\n      \"evidence_type\": \"positive\"\n    }\n  ],\n  \"uncertainty\": false\n}"
+  },
+  "d5": {
+    "agent_id": "D5",
+    "dimension": "Local rationality",
+    "rating": "SOME",
+    "rationale": "The response provides some context regarding the decision-making process, but it lacks a comprehensive explanation of the contemporaneous reasoning behind actions taken.",
+    "evidence": [
+      {
+        "id": "Text p02_c01",
+        "quote": "Based on presenting symptoms of abdominal pain, vomiting and raised CRP - obstruction to be considered as a possible differential diagnosis.",
+        "evidence_type": "positive"
+      },
+      {
+        "id": "Text p03_c01",
+        "quote": "There is no certainty that an earlier CT would have made a difference as we cannot determine at what point the patient perforated.",
+        "evidence_type": "negative"
+      }
+    ],
+    "uncertainty": true,
+    "raw_output": "{\n  \"rating\": \"SOME\",\n  \"rationale\": \"The response provides some context regarding the decision-making process, but it lacks a comprehensive explanation of the contemporaneous reasoning behind actions taken.\",\n  \"evidence\": [\n    {\n      \"id\": \"Text p02_c01\",\n      \"quote\": \"Based on presenting symptoms of abdominal pain, vomiting and raised CRP - obstruction to be considered as a possible differential diagnosis.\",\n      \"evidence_type\": \"positive\"\n    },\n    {\n      \"id\": \"Text p03_c01\",\n      \"quote\": \"There is no certainty that an earlier CT would have made a difference as we cannot determine at what point the patient perforated.\",\n      \"evidence_type\": \"negative\"\n    }\n  ],\n  \"uncertainty\": true\n}"
   }
 }
