@@ -1,0 +1,53 @@
+{
+  "report_id": "test",
+  "source_path": "G:\\My Drive\\LLM projects\\lrrit-llm\\data\\raw_pdfs\\test.pdf",
+  "text_chunks": [
+    {
+      "chunk_id": "p01_c01",
+      "provenance": {
+        "report_id": "test",
+        "source_path": "G:\\My Drive\\LLM projects\\lrrit-llm\\data\\raw_pdfs\\test.pdf",
+        "page": 1,
+        "extractor": "pymupdf",
+        "bbox": null,
+        "confidence": null,
+        "notes": null
+      },
+      "text": "AAR Delayed diagnosis of small bowel obstruction and delayed inter-hospital \ntransfer \n \nFacilitated by: ABC \n \nAttendees: \n- Medical SHO \n- Stroke Consultant and Medicine Quality Lead \n- Acute Medicine Consultant \n- Trust Mortality Reviewer \n \nLevel of harm: Low harm- based on patient experience \n \nDuty of Candour status: n/a \n \n1. What happened?  \n \nDatix: Delayed diagnosis of SB obstruction.  No CT or surgical review. \n \nSummary: \nSixty nine year old with multiple medical comorbidities.  Background of CABG and HTN, \nrecent CVA. Referred from EM to SDEC as pyelonephritis. Presented for ten days \nbefore with chronic abdominal pain – ongoing for three months. \nAlso had about three stones weight loss. \nHas CT in ED on – aneurysm seen and was referred to \nvascular team. \nRepresented to ED on with abdominal pain and \ndiarrhoea (not new). \nReferred to SDEC on Friday, \nSeen by medics on the – symptoms of abdominal pain persisted. \nBlood tests showed high CRP and WCC and raised Lactate. \nThe patient was opening bowels and had been drinking water. \nStarted on antibiotics and plan for Abdo X-ray as he had recent CT \nwhich did not show any obstruction. \nClinician also contacted Gastro who saw patient the same day. \nAbdo X-ray performed after 5 pm on the showed nonspecific \ndilatation of the bowels. \nOn call SHO on AMU Site A – \nSaturday, - Late Saturday morning: \nOngoing abdominal pain. Had Morphine which helped. Anti-emetic \nadministered for vomiting. Noted CT report for . \nContinued antibiotic. Noted seen by gasto team and waiting for \nendoscopy. \n- Sunday morning: \nStill having abdominal pain. Noted no bowel actions in a few days. \nBowels issues were not a problem before but appear to have \ndeveloped in the initial few days of admission.",
+      "text_hash": "5b8861da8eebf2a8"
+    },
+    {
+      "chunk_id": "p02_c01",
+      "provenance": {
+        "report_id": "test",
+        "source_path": "G:\\My Drive\\LLM projects\\lrrit-llm\\data\\raw_pdfs\\test.pdf",
+        "page": 2,
+        "extractor": "pymupdf",
+        "bbox": null,
+        "confidence": null,
+        "notes": null
+      },
+      "text": "Reviewed abdominal X-ray report and decided to repeat X-ray. The X-ray was performed \nas a matter of urgency. \nThe SHO discussed repeat X-ray results with radiology - Radiology \nadvised that since bowels were still dilated to proceed with a CT \nabdomen - this was performed the same afternoon - diagnosed SB \nobstruction. Patient was kept NBM, ryles tube inserted, referred to \nand accepted by surgery. \nPlans made to transfer to STH urgently -there was a slight delay. \n \n2. What did we intend to happen? \n \nBased on presenting symptoms of abdominal pain, vomiting and \nraised CRP - obstruction to be considered as a possible differential \ndiagnosis. \nThe first X-ray performed the Friday night to be escalated for further \nreview and might have prompted an earlier CT abdomen, rather than \na few days later when the patient still continued to have pain. \nFor patients in ED or SDEC who are acutely unwell and \nrequire urgent surgical intervention, transfer to be made to the site \nwhere the surgeons are even if there is not a surgical bed available - \ntake to ED in the interim. \n \n \n3. Why was there a difference?  \n \nNo known systematic way to ensure that X-ray results are properly \nescalated for further review. \nX-rays were reviewed but it appears that the findings were nil \nsignificant because the patient had a CT abdomen performed a few \nweeks before. \nSurgery advised to send the patient to Site B ED if bed on ward not \navailable. \nNo bed on ward was available, but the patient was not sent to ED, \nwas instead transferred to Site B the following morning. However, \nthere was no certainty that surgery would be performed that very \nnight if the patient was transferred earlier. \n \nIt is not a certainty at what time the patient actually perforated. \nLactate remained normal up to point of surgery. No evidence to \nsuggest that perforation happened before surgery. It appears that \nthis was an evolving pathology. \nThere are ongoing issues with transfer between sites. There is \nongoing work being discussed with executives re acute surgical \npatients who need transfer between \nResources are limited to have surgeons to c o v e r \n \n4. What are we learning?",
+      "text_hash": "b62d61993aa56c1b"
+    },
+    {
+      "chunk_id": "p03_c01",
+      "provenance": {
+        "report_id": "test",
+        "source_path": "G:\\My Drive\\LLM projects\\lrrit-llm\\data\\raw_pdfs\\test.pdf",
+        "page": 3,
+        "extractor": "pymupdf",
+        "bbox": null,
+        "confidence": null,
+        "notes": null
+      },
+      "text": "Patient was post-taked in a timely manner. \nReferred to and seen by specialty in a timely manner. \nHad medical w e e k e n d review. \nAppropriate investigations were ordered and performed. \nAppropriate treatment was prescribed and administered. \nDelay in transferring from \nI but there is no certainty that \nthis affected t h e o u t c o m e for t h e patient. \nThere is no certainty that an earlier CT would have made a difference \nas we cannot determine at what point the patient perforated. \nSymptoms not specific for SB obstruction. \n \n5. Immediate safety actions \n \nSHO discussed case with registrar.  \nRepeat X-rays showed bowel dilatation, discussion had radiology, CT abdomen \nperformed - SB noted - NBM and ryles tube - referred to and accepted by surgery. \n \n6. Key learning points \n \nFor patients in | TED or SDEC who are acutely unwell and require urgent surgical \nintervention, transfer to be made to the site where the surgeons are even if there is not a \nsurgical bed available - \nThe patient can be taken to ED in the interim - this will expedite \nspecialist intervention. \n \n7. Improvement action plan \n \ni. Share case within the acute \nmedical community at \nDiscuss in AMU M&M – AMU Consultant October 2024 – Completed. \nii.  Link case to stream of work \nwhich is currently being done \nregarding the acutely surgical ill \npatients and endoscopy transfers \nbetween Site A and B. \nLiaise with QM to arrange. – Medicine Quality Lead October 2024 \niii. SHO can use case for personal \nreflection/appraisal. \nDiscuss and share experience \nwith educational supervisor. \nJ – SHO. n/a",
+      "text_hash": "6c6ecacc3eff0dba"
+    }
+  ],
+  "tables": [],
+  "pack_hash": "8b387b78762941c3",
+  "metadata": {
+    "note": "smoke_test"
+  }
+}

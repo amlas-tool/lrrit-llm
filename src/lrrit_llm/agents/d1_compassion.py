@@ -1,0 +1,171 @@
+ 
+from __future__ import annotations
+
+from typing import Dict, Any, List
+from unittest import result
+
+from lrrit_llm.evidence.schema import EvidencePack, TextChunk, TableEvidence
+
+import json
+
+
+class D1CompassionAgent:
+    """
+    D1 – Compassionate Engagement
+
+    Evaluates whether the learning response demonstrates compassionate
+    engagement with people affected by the incident.
+    """
+
+    AGENT_ID = "D1"
+    DIMENSION_NAME = "Compassionate engagement with people affected"
+
+    def __init__(self, model_client):
+        """
+        model_client: wrapper around OpenAI / local LLM.
+        Must expose a .complete(prompt: str) -> str method.
+        """
+        self.model = model_client
+
+    def run(self, pack: EvidencePack) -> Dict[str, Any]:
+        """
+        Run the agent on a single EvidencePack.
+        Returns a structured result for LaJ + human comparison.
+        """
+        prompt = self._build_prompt(pack)
+        raw_response = self.model.complete(prompt)
+
+        # Parsing is deliberately simple for now.
+        # You may later harden this with JSON schema enforcement.
+        result = self._parse_response(raw_response)
+
+        if result["rating"] in ("GOOD", "SOME"):
+            if not any(e.get("evidence_type") == "positive" for e in result["evidence"]):
+                result["uncertainty"] = True # flag uncertainty if no positive evidence
+
+        if result["rating"] == "LITTLE":
+            if not result["evidence"]:
+                result["uncertainty"] = True # flag uncertainty if no evidence at all
+
+
+        return {
+            "agent_id": self.AGENT_ID,
+            "dimension": self.DIMENSION_NAME,
+            "rating": result.get("rating"),
+            "rationale": result.get("rationale"),
+            "evidence": result.get("evidence", []),
+            "uncertainty": result.get("uncertainty", False),
+            "raw_output": raw_response,
+        }
+
+    # -------------------------
+    # Prompt construction
+    # -------------------------
+
+    def _build_prompt(self, pack: EvidencePack) -> str:
+        """
+        Construct a conservative, evidence-grounded prompt.
+        """
+        evidence_blocks = []
+
+        for chunk in pack.text_chunks:
+            evidence_blocks.append(
+                f"[Text {chunk.chunk_id} | page {chunk.provenance.page}]\n"
+                f"{chunk.text}"
+            )
+
+        for table in pack.tables:
+            evidence_blocks.append(table.text_fallback)
+
+        evidence_text = "\n\n".join(evidence_blocks)
+
+        return f"""
+You are an expert reviewer applying the Learning Response Review and Improvement Tool (LRRIT).
+
+Dimension: Compassionate engagement with people affected.
+
+Task:
+- Assess whether the learning response demonstrates compassionate engagement
+  with people affected by the incident.
+- Base your judgement ONLY on the evidence provided.
+- Do NOT infer actions or intentions that are not stated.
+
+Rating options:
+- GOOD evidence
+- SOME evidence
+- LITTLE evidence
+
+Instructions:
+- Quote or reference specific evidence using the IDs provided.
+- If evidence is sparse or ambiguous, state this explicitly.
+- Do not assess other dimensions (e.g. blame, systems).
+
+Evidence:
+{evidence_text}
+
+Return STRICT JSON ONLY (no markdown, no extra text) with this schema:
+
+{{
+  "rating": "GOOD" | "SOME" | "LITTLE",
+  "rationale": "string",
+  "evidence": [
+    {{
+      "id": "Text pXX_cYY | Table pXX_tYY",
+      "quote": "verbatim excerpt <= 25 words",
+      "evidence_type": "positive | negative"
+    }}
+  ],
+  "uncertainty": true | false
+}}
+
+Rules:
+- Return STRICT JSON only.
+- Every evidence item MUST include:
+  - a verbatim quote taken from the cited Text/Table block (<= 25 words)
+  - an evidence_type field: "positive" or "negative"
+- Use "positive" when the quote directly demonstrates compassionate engagement.
+- Use "negative" when the quote exemplifies clinical/process-focused documentation that supports the conclusion that compassionate engagement is not documented.
+- If rating is GOOD or SOME: include at least one "positive" evidence item.
+- If rating is LITTLE:
+  - Prefer including 1–2 "negative" evidence items; OR
+  - If no relevant excerpt exists, set evidence to [] and set uncertainty to true.
+- Do not invent quotes. Do not paraphrase quotes.
+
+
+""".strip()
+    
+    # -------------------------
+    # Response parsing
+    # -------------------------
+
+    def _parse_response(self, text: str) -> Dict[str, Any]:
+        """
+        Parse strict JSON output. If the model returns extra text,
+        attempt to recover the first JSON object.
+        """
+        text = text.strip()
+
+        # Fast path: strict JSON
+        try:
+            obj = json.loads(text)
+            return self._normalise_obj(obj)
+        except Exception:
+            pass
+
+        # Recovery: extract first {...} block
+        start = text.find("{")
+        end = text.rfind("}")
+        if start != -1 and end != -1 and end > start:
+            candidate = text[start:end+1]
+            obj = json.loads(candidate)
+            return self._normalise_obj(obj)
+
+        raise ValueError("Agent did not return valid JSON.")
+    
+    def _normalise_obj(self, obj: Dict[str, Any]) -> Dict[str, Any]:
+        return {
+            "rating": obj.get("rating"),
+            "rationale": obj.get("rationale"),
+            "evidence": obj.get("evidence", []) or [],
+            "uncertainty": bool(obj.get("uncertainty", False)),
+        }

@@ -1,0 +1,94 @@
+from __future__ import annotations
+
+import os
+import json
+from pathlib import Path
+
+from lrrit_llm.agents.d3_learning_actions import D3LearningActionsAgent
+from lrrit_llm.evidence import pack
+from lrrit_llm.ingest.pdf_text import extract_text_pages
+from lrrit_llm.ingest.pdf_tables import extract_tables_from_pdf
+from lrrit_llm.evidence.pack import build_evidence_pack, save_evidence_pack
+
+from lrrit_llm.clients.openai_client import OpenAIChatClient
+from lrrit_llm.agents.d1_compassion import D1CompassionAgent
+from lrrit_llm.agents.d2_systems import D2SystemsApproachAgent
+from lrrit_llm.agents.d3_learning_actions import D3LearningActionsAgent
+from lrrit_llm.agents.d4_blame import D4BlameLanguageAgent
+
+
+def main():
+    # ---- CONFIG ----
+    pdf_path = Path(
+        os.environ.get(
+            "LRRIT_TEST_PDF",
+            r"G:\My Drive\LLM projects\lrrit-llm\data\raw_pdfs\test.pdf",
+        )
+    )
+
+    if not pdf_path.exists():
+        raise FileNotFoundError(f"PDF not found: {pdf_path}")
+
+    report_id = pdf_path.stem
+    out_dir = Path("data") / "processed" / "reports" / report_id
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    # ---- INGEST ----
+    print(f"[1/4] Extracting text: {pdf_path}")
+    text_pages = extract_text_pages(str(pdf_path))
+
+    print(f"[2/4] Extracting tables -> {out_dir}")
+    tables = extract_tables_from_pdf(
+        pdf_path=str(pdf_path),
+        report_id=report_id,
+        out_dir=str(out_dir),
+        page_numbers=None,
+    )
+
+    # ---- BUILD EVIDENCE PACK ----
+    print("[3/4] Building EvidencePack")
+    pack = build_evidence_pack(
+        report_id=report_id,
+        source_path=str(pdf_path),
+        text_pages=text_pages,
+        tables=tables,
+        extractor_text_name="pymupdf",
+        metadata={"note": "smoke_test"},
+    )
+
+    if pack is None:
+        raise RuntimeError("build_evidence_pack returned None")
+
+    pack_path = out_dir / "evidence_pack.json"
+    save_evidence_pack(pack, str(pack_path))
+    print(f"Saved EvidencePack: {pack_path}")
+
+    # ---- RUN AGENTS ----
+    print("[4/4] Running agents (D1,D2,D3,D4...)")
+    client = OpenAIChatClient(
+        model=os.environ.get("OPENAI_MODEL", "gpt-4o-mini"),
+        temperature=0.0,
+    )
+
+    d1 = D1CompassionAgent(client)
+    d2 = D2SystemsApproachAgent(client)
+    d3 = D3LearningActionsAgent(client)
+    d4 = D4BlameLanguageAgent(client)
+
+    d1_out = d1.run(pack)
+    d2_out = d2.run(pack)
+    d3_out = d3.run(pack)
+    d4_out = d4.run(pack)
+
+    results = {"d1": d1_out, "d2": d2_out, "d3": d3_out, "d4": d4_out}
+    results_path = out_dir / "agent_results.json"
+    results_path.write_text(
+        json.dumps(results, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+
+    print(f"Saved agent results: {results_path}")
+
+
+if __name__ == "__main__":
+    main()
