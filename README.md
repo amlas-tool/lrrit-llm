@@ -143,7 +143,7 @@ This supports transparent human review and later LLM-as-Judge (LaJ) consistency 
 
 The LRRIT guidance words on evidence - GOOD, SOME, LITTLE - are used to grade the dimensions with supporting rationale. 
 
-The uncertainty flag is used to flag the need for human review. It can be triggered differently according to the data dimensions. In cases where no verbatim quotes support the grading, the uncertainty flag is usually set to 'YES'.
+The `uncertainty` flag is used to flag the need for human review. It can be triggered differently according to the data dimensions. In cases where no verbatim quotes support the grading, the uncertainty flag is usually set to 'YES'.
 
 ---
 
