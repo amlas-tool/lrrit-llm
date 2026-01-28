@@ -139,7 +139,11 @@ Each evidence item is labelled as:
 - `positive` → supports the dimension judgement
 - `negative` → weakens/contradicts the dimension judgement (or indicates absence/over-reliance on individual action depending on dimension)
 
-This supports transparent human review and later LLM-as-Judge (LaJ) consistency checking. The LRRIT guidance words on evidence - GOOD, SOME, LITTLE - are used to grade the dimensions with supporting rationale. 
+This supports transparent human review and later LLM-as-Judge (LaJ) consistency checking. 
+
+The LRRIT guidance words on evidence - GOOD, SOME, LITTLE - are used to grade the dimensions with supporting rationale. 
+
+The uncertainty flag is used to flag the need for human review. It can be triggered differently according to the data dimensions. In cases where no verbatim quotes support the grading, the uncertainty flag is usually set to 'YES'.
 
 ---
 
