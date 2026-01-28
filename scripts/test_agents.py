@@ -93,6 +93,11 @@ def main():
 
 
     results = {"d1": d1_out, "d2": d2_out, "d3": d3_out, "d4": d4_out, "d5": d5_out, "d6": d6_out, "d7": d7_out, "d8": d8_out}
+    results["_meta"] = {
+        "model": os.environ.get("OPENAI_MODEL", "unknown"),
+        "temperature": 0.0,
+    }
+
     results_path = out_dir / "agent_results.json"
     results_path.write_text(
         json.dumps(results, ensure_ascii=False, indent=2),

@@ -39,6 +39,17 @@ def render_html(report_dir: Path) -> Path:
 
     results = json.loads(results_path.read_text(encoding="utf-8"))
 
+    # Model metadata (preferred in results["_meta"], with safe fallbacks)
+    meta = results.get("_meta", {}) if isinstance(results, dict) else {}
+    model_name = (meta.get("model") or meta.get("openai_model") or "").strip()
+    if not model_name:
+        # Some earlier runners may store this at top-level
+        model_name = (results.get("model") or "").strip()
+    if not model_name:
+        # Last resort: try env var (renderer is often run in same env as runner)
+        import os
+        model_name = (os.environ.get("OPENAI_MODEL") or "unknown").strip()
+
     pack = None
     if pack_path.exists():
         try:
@@ -55,12 +66,41 @@ def render_html(report_dir: Path) -> Path:
 
     now = datetime.now().strftime("%Y-%m-%d %H:%M")
 
-    # Order agents by id if possible
+    # Order agents by numeric id if possible and ignore non-agent keys (e.g. _meta)
     def sort_key(item):
-        k = item[0]
-        return k
+        k = str(item[0]).lower()
+        if k.startswith("d") and k[1:].isdigit():
+            return (0, int(k[1:]))
+        return (1, k)
 
-    agent_items = sorted(results.items(), key=sort_key)
+    agent_items = []
+    for k, v in (results or {}).items():
+        if k == "_meta":
+            continue
+        if isinstance(v, dict) and (v.get("agent_id") or str(k).lower().startswith("d")):
+            agent_items.append((k, v))
+    agent_items = sorted(agent_items, key=sort_key)
+
+    # Build summary table (one line per dimension, clickable to jump to card)
+    summary_rows = []
+    for key, obj in agent_items:
+        agent_id = obj.get("agent_id", key)
+        dim = obj.get("dimension", "")
+        rating = obj.get("rating", "")
+        uncertainty = obj.get("uncertainty", False)
+
+        rating_col = _badge_colour(rating)
+        uncert_col = _badge_colour("YES" if uncertainty else "NO")
+
+        anchor = f"dim-{_esc(agent_id).lower()}"
+        summary_rows.append(f"""
+        <tr class=\"summary-row\" onclick=\"location.href='#{anchor}'\" tabindex=\"0\" role=\"link\">
+          <td class=\"mono\">{_esc(agent_id)}</td>
+          <td>{_esc(dim)}</td>
+          <td><span class=\"pill\" style=\"background:{rating_col}\">{_esc(rating)}</span></td>
+          <td><span class=\"pill\" style=\"background:{uncert_col}\">{'YES' if uncertainty else 'NO'}</span></td>
+        </tr>
+        """)
 
     cards_html = []
     for key, obj in agent_items:
@@ -94,8 +134,10 @@ def render_html(report_dir: Path) -> Path:
         else:
             ev_rows.append('<div class="muted">No evidence quotes returned.</div>')
 
+        anchor = f"dim-{_esc(agent_id).lower()}"
+
         cards_html.append(f"""
-        <section class="card">
+        <section class="card" id="{anchor}">
           <div class="card-head">
             <div>
               <div class="agent-title">{_esc(agent_id)} — {_esc(dim)}</div>
@@ -171,6 +213,41 @@ def render_html(report_dir: Path) -> Path:
       gap: 10px 18px;
       margin-top: 8px;
     }}
+    .mono {{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+    }}
+    .summary {{
+      background: white;
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-top: 16px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+      border: 1px solid #e6e6e6;
+      border-left: 6px solid var(--nhs-blue);
+    }}
+    table {{
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }}
+    th, td {{
+      text-align: left;
+      padding: 10px 8px;
+      border-bottom: 1px solid #eee;
+      vertical-align: top;
+    }}
+    th {{
+      font-size: 12px;
+      letter-spacing: 0.2px;
+      text-transform: uppercase;
+      opacity: 0.85;
+    }}
+    tr.summary-row {{
+      cursor: pointer;
+    }}
+    tr.summary-row:hover {{
+      background: #f7f7f7;
+    }}
     .meta .k {{ font-weight: 700; }}
     .meta .v {{ word-break: break-all; }}
     .card {{
@@ -245,7 +322,6 @@ def render_html(report_dir: Path) -> Path:
       margin-bottom: 6px;
     }}
     .ev-id {{
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
       font-size: 12px;
       opacity: 0.8;
     }}
@@ -291,12 +367,43 @@ def render_html(report_dir: Path) -> Path:
         <div><span class="k">Pack hash:</span> <span class="v">{html.escape(pack_hash)}</span></div>
         <div><span class="k">Text chunks:</span> <span class="v">{chunk_count}</span></div>
         <div><span class="k">Tables:</span> <span class="v">{table_count}</span></div>
+        <div><span class="k">Model:</span> <span class="v mono">{html.escape(model_name)}</span></div>
       </div>
       <footer>Open this file locally in any browser. No data is uploaded anywhere.</footer>
     </div>
 
+    <div class="summary" id="summary">
+      <div style="font-weight:900;font-size:14px;">Dimension summary</div>
+      <div class="muted" style="margin-top:6px;">Click a row to jump to the detailed section for that dimension.</div>
+      <table aria-label="Dimension summary">
+        <thead>
+          <tr>
+            <th>Agent</th>
+            <th>Dimension</th>
+            <th>Rating</th>
+            <th>Uncertainty</th>
+          </tr>
+        </thead>
+        <tbody>
+          {''.join(summary_rows)}
+        </tbody>
+      </table>
+    </div>
+
     {''.join(cards_html)}
   </div>
+
+  <script>
+    // Keyboard accessibility for clickable summary rows
+    document.querySelectorAll('tr.summary-row').forEach(function(row) {{
+      row.addEventListener('keydown', function(e) {{
+        if (e.key === 'Enter' || e.key === ' ') {{
+          e.preventDefault();
+          row.click();
+        }}
+      }});
+    }});
+  </script>
 </body>
 </html>
 """
