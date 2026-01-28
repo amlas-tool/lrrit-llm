@@ -19,7 +19,17 @@ The project explores whether LLMs can:
   - blame vs non-blame language
 - Support **human review**, not replace it
 
-This codebase is intended for **research, prototyping, and governance evaluation**, not operational deployment.
+The idea is to have:
+
+- Clean separation of dimensions (D1–D8) with no conceptual leakage
+- Evidence-grounded outputs (verbatim, auditable, polarity-aware)
+- Appropriate uncertainty handling (especially in D5–D7)
+- An agentic architecture that actually reflects the LRRIT rubric, not a superficial mapping
+- A system that can be explained to clinicians, safety scientists, and auditors.
+
+Further explanation can be found below.
+
+NB. This codebase is intended for **research, prototyping, and governance evaluation**, not operational deployment.
 
 ---
 
