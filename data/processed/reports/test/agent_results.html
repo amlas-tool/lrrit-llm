@@ -156,6 +156,24 @@
     .ev-quote {
       font-size: 14px;
     }
+    .ev-actions {
+      margin-top: 8px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      border: 1px solid #ccc;
+      background: #fff;
+      padding: 6px 10px;
+      border-radius: 10px;
+      cursor: pointer;
+      text-decoration: none;
+      font-size: 0.9em;
+    }
+    .btn:hover {
+      background: #f5f5f5;
+    }
     details.raw {
       margin-top: 12px;
     }
@@ -179,11 +197,25 @@
     }
   </style>
 </head>
+<script>
+    async function copyText(text) {
+      try {
+        await navigator.clipboard.writeText(text);
+      } catch (e) {
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        document.body.removeChild(ta);
+      }
+    }
+  </script>
 <body>
   <header>
     <div class="wrap">
       <div style="font-size:22px;font-weight:900;">LRRIT Agent Results</div>
-      <div style="opacity:0.9;margin-top:4px;">Report: test • Generated: 2026-01-29 10:06</div>
+      <div style="opacity:0.9;margin-top:4px;">Report: test • Generated: 2026-01-29 21:30</div>
     </div>
   </header>
 
@@ -196,8 +228,13 @@
         <div><span class="k">Text chunks:</span> <span class="v">3</span></div>
         <div><span class="k">Tables:</span> <span class="v">0</span></div>
         <div><span class="k">Model:</span> <span class="v mono">gpt-4o-mini</span></div>
+        <div id="pdf-status" style="display:none; margin: 10px 0; padding: 10px; border: 1px solid #f0c36d; background: #fff8e1; border-radius: 10px;">
+          </div>
       </div>
-      <footer>Open this file locally in any browser. No data is uploaded anywhere.</footer>
+      <footer>This file is stored locally. No data is uploaded anywhere. <p>NB. The <b>copy quote</b> button copies the text of the quote to the clipboard. 
+      The <b>open pdf</b> button opens the original PDF in a new tab. <p>You can then use Ctrl+F, Ctrl+V to search for the quote within the report. 
+      Note that long quotes may be split across lines or the model may have added punctuation or changed the formatting. 
+      In this case, delete parts of the quote until it works. </footer>
     </div>
 
     <div class="summary" id="summary">
@@ -305,6 +342,10 @@
                     <span class="ev-id">Text p01_c01 | page 1</span>
                   </div>
                   <div class="ev-quote">“Level of harm: Low harm- based on patient experience”</div>
+                  <div class="ev-actions">
+                    <button class="btn" type="button" onclick='copyText("Level of harm: Low harm- based on patient experience")'>Copy quote</button>
+                    <a class="btn" target="lrrit_pdf_tab" href="file:///G:/My%20Drive/LLM%20projects/lrrit-llm/data/raw_pdfs/test.pdf#page=1">Open PDF (page 1)</a>
+                  </div>
                 </div>
                 
                 <div class="ev-row">
@@ -313,29 +354,14 @@
                     <span class="ev-id">Text p02_c01 | page 2</span>
                   </div>
                   <div class="ev-quote">“Plans made to transfer to STH urgently -there was a slight delay.”</div>
+                  <div class="ev-actions">
+                    <button class="btn" type="button" onclick='copyText("Plans made to transfer to STH urgently -there was a slight delay.")'>Copy quote</button>
+                    <a class="btn" target="lrrit_pdf_tab" href="file:///G:/My%20Drive/LLM%20projects/lrrit-llm/data/raw_pdfs/test.pdf#page=2">Open PDF (page 2)</a>
+                  </div>
                 </div>
-                
+                <div class="muted">No more evidence quotes returned.</div>
 
-            <details class="raw">
-              <summary>Raw model output</summary>
-              <pre>{
-  &quot;rating&quot;: &quot;LITTLE&quot;,
-  &quot;rationale&quot;: &quot;The evidence provided lacks specific references to compassionate engagement with the patient. The focus is primarily on clinical processes and outcomes.&quot;,
-  &quot;evidence&quot;: [
-    {
-      &quot;id&quot;: &quot;Text p01_c01 | page 1&quot;,
-      &quot;quote&quot;: &quot;Level of harm: Low harm- based on patient experience&quot;,
-      &quot;evidence_type&quot;: &quot;negative&quot;
-    },
-    {
-      &quot;id&quot;: &quot;Text p02_c01 | page 2&quot;,
-      &quot;quote&quot;: &quot;Plans made to transfer to STH urgently -there was a slight delay.&quot;,
-      &quot;evidence_type&quot;: &quot;negative&quot;
-    }
-  ],
-  &quot;uncertainty&quot;: true
-}</pre>
-            </details>
+            
           </div>
         </section>
         
@@ -369,6 +395,10 @@
                     <span class="ev-id">Text p02_c01</span>
                   </div>
                   <div class="ev-quote">“No known systematic way to ensure that X-ray results are properly escalated for further review.”</div>
+                  <div class="ev-actions">
+                    <button class="btn" type="button" onclick='copyText("No known systematic way to ensure that X-ray results are properly escalated for further review.")'>Copy quote</button>
+                    <a class="btn" target="lrrit_pdf_tab" href="file:///G:/My%20Drive/LLM%20projects/lrrit-llm/data/raw_pdfs/test.pdf#page=2">Open PDF (page 2)</a>
+                  </div>
                 </div>
                 
                 <div class="ev-row">
@@ -377,29 +407,14 @@
                     <span class="ev-id">Text p03_c01</span>
                   </div>
                   <div class="ev-quote">“SHO can use case for personal reflection/appraisal.”</div>
+                  <div class="ev-actions">
+                    <button class="btn" type="button" onclick='copyText("SHO can use case for personal reflection/appraisal.")'>Copy quote</button>
+                    <a class="btn" target="lrrit_pdf_tab" href="file:///G:/My%20Drive/LLM%20projects/lrrit-llm/data/raw_pdfs/test.pdf#page=3">Open PDF (page 3)</a>
+                  </div>
                 </div>
-                
+                <div class="muted">No more evidence quotes returned.</div>
 
-            <details class="raw">
-              <summary>Raw model output</summary>
-              <pre>{
-  &quot;rating&quot;: &quot;SOME&quot;,
-  &quot;rationale&quot;: &quot;The response includes some systems-level analysis, particularly regarding transfer processes and escalation pathways, but also emphasizes individual actions and reflections.&quot;,
-  &quot;evidence&quot;: [
-    {
-      &quot;id&quot;: &quot;Text p02_c01&quot;,
-      &quot;quote&quot;: &quot;No known systematic way to ensure that X-ray results are properly escalated for further review.&quot;,
-      &quot;evidence_type&quot;: &quot;positive&quot;
-    },
-    {
-      &quot;id&quot;: &quot;Text p03_c01&quot;,
-      &quot;quote&quot;: &quot;SHO can use case for personal reflection/appraisal.&quot;,
-      &quot;evidence_type&quot;: &quot;negative&quot;
-    }
-  ],
-  &quot;uncertainty&quot;: false
-}</pre>
-            </details>
+            
           </div>
         </section>
         
@@ -433,6 +448,10 @@
                     <span class="ev-id">Text p03_c01</span>
                   </div>
                   <div class="ev-quote">“Transfer to be made to the site where the surgeons are even if there is not a surgical bed available.”</div>
+                  <div class="ev-actions">
+                    <button class="btn" type="button" onclick='copyText("Transfer to be made to the site where the surgeons are even if there is not a surgical bed available.")'>Copy quote</button>
+                    <a class="btn" target="lrrit_pdf_tab" href="file:///G:/My%20Drive/LLM%20projects/lrrit-llm/data/raw_pdfs/test.pdf#page=3">Open PDF (page 3)</a>
+                  </div>
                 </div>
                 
                 <div class="ev-row">
@@ -441,29 +460,14 @@
                     <span class="ev-id">Text p03_c01</span>
                   </div>
                   <div class="ev-quote">“Link case to stream of work which is currently being done regarding the acutely surgical ill patients.”</div>
+                  <div class="ev-actions">
+                    <button class="btn" type="button" onclick='copyText("Link case to stream of work which is currently being done regarding the acutely surgical ill patients.")'>Copy quote</button>
+                    <a class="btn" target="lrrit_pdf_tab" href="file:///G:/My%20Drive/LLM%20projects/lrrit-llm/data/raw_pdfs/test.pdf#page=3">Open PDF (page 3)</a>
+                  </div>
                 </div>
-                
+                <div class="muted">No more evidence quotes returned.</div>
 
-            <details class="raw">
-              <summary>Raw model output</summary>
-              <pre>{
-  &quot;rating&quot;: &quot;GOOD&quot;,
-  &quot;rationale&quot;: &quot;The learning actions are specific, actionable, and aimed at improving systemic processes for urgent surgical interventions.&quot;,
-  &quot;evidence&quot;: [
-    {
-      &quot;id&quot;: &quot;Text p03_c01&quot;,
-      &quot;quote&quot;: &quot;Transfer to be made to the site where the surgeons are even if there is not a surgical bed available.&quot;,
-      &quot;evidence_type&quot;: &quot;positive&quot;
-    },
-    {
-      &quot;id&quot;: &quot;Text p03_c01&quot;,
-      &quot;quote&quot;: &quot;Link case to stream of work which is currently being done regarding the acutely surgical ill patients.&quot;,
-      &quot;evidence_type&quot;: &quot;positive&quot;
-    }
-  ],
-  &quot;uncertainty&quot;: false
-}</pre>
-            </details>
+            
           </div>
         </section>
         
@@ -497,6 +501,10 @@
                     <span class="ev-id">Text p03_c01</span>
                   </div>
                   <div class="ev-quote">“Delay in transferring from I but there is no certainty that this affected the outcome for the patient.”</div>
+                  <div class="ev-actions">
+                    <button class="btn" type="button" onclick='copyText("Delay in transferring from I but there is no certainty that this affected the outcome for the patient.")'>Copy quote</button>
+                    <a class="btn" target="lrrit_pdf_tab" href="file:///G:/My%20Drive/LLM%20projects/lrrit-llm/data/raw_pdfs/test.pdf#page=3">Open PDF (page 3)</a>
+                  </div>
                 </div>
                 
                 <div class="ev-row">
@@ -505,29 +513,14 @@
                     <span class="ev-id">Text p02_c01</span>
                   </div>
                   <div class="ev-quote">“No known systematic way to ensure that X-ray results are properly escalated for further review.”</div>
+                  <div class="ev-actions">
+                    <button class="btn" type="button" onclick='copyText("No known systematic way to ensure that X-ray results are properly escalated for further review.")'>Copy quote</button>
+                    <a class="btn" target="lrrit_pdf_tab" href="file:///G:/My%20Drive/LLM%20projects/lrrit-llm/data/raw_pdfs/test.pdf#page=2">Open PDF (page 2)</a>
+                  </div>
                 </div>
-                
+                <div class="muted">No more evidence quotes returned.</div>
 
-            <details class="raw">
-              <summary>Raw model output</summary>
-              <pre>{
-  &quot;rating&quot;: &quot;GOOD&quot;,
-  &quot;rationale&quot;: &quot;The learning response avoids blame-oriented language and focuses on systemic issues rather than attributing fault to individuals.&quot;,
-  &quot;evidence&quot;: [
-    {
-      &quot;id&quot;: &quot;Text p03_c01&quot;,
-      &quot;quote&quot;: &quot;Delay in transferring from I but there is no certainty that this affected the outcome for the patient.&quot;,
-      &quot;evidence_type&quot;: &quot;positive&quot;
-    },
-    {
-      &quot;id&quot;: &quot;Text p02_c01&quot;,
-      &quot;quote&quot;: &quot;No known systematic way to ensure that X-ray results are properly escalated for further review.&quot;,
-      &quot;evidence_type&quot;: &quot;positive&quot;
-    }
-  ],
-  &quot;uncertainty&quot;: false
-}</pre>
-            </details>
+            
           </div>
         </section>
         
@@ -561,6 +554,10 @@
                     <span class="ev-id">Text p02_c01</span>
                   </div>
                   <div class="ev-quote">“Based on presenting symptoms of abdominal pain, vomiting and raised CRP - obstruction to be considered as a possible differential diagnosis.”</div>
+                  <div class="ev-actions">
+                    <button class="btn" type="button" onclick='copyText("Based on presenting symptoms of abdominal pain, vomiting and raised CRP - obstruction to be considered as a possible differential diagnosis.")'>Copy quote</button>
+                    <a class="btn" target="lrrit_pdf_tab" href="file:///G:/My%20Drive/LLM%20projects/lrrit-llm/data/raw_pdfs/test.pdf#page=2">Open PDF (page 2)</a>
+                  </div>
                 </div>
                 
                 <div class="ev-row">
@@ -568,30 +565,15 @@
                     <span class="pill" style="background:#D5281B">negative</span>
                     <span class="ev-id">Text p03_c01</span>
                   </div>
-                  <div class="ev-quote">“There is no certainty that an earlier CT would have made a difference as we cannot determine at what point the patient perforated.”</div>
+                  <div class="ev-quote">“Delay in transferring from I but there is no certainty that this affected the outcome for the patient.”</div>
+                  <div class="ev-actions">
+                    <button class="btn" type="button" onclick='copyText("Delay in transferring from I but there is no certainty that this affected the outcome for the patient.")'>Copy quote</button>
+                    <a class="btn" target="lrrit_pdf_tab" href="file:///G:/My%20Drive/LLM%20projects/lrrit-llm/data/raw_pdfs/test.pdf#page=3">Open PDF (page 3)</a>
+                  </div>
                 </div>
-                
+                <div class="muted">No more evidence quotes returned.</div>
 
-            <details class="raw">
-              <summary>Raw model output</summary>
-              <pre>{
-  &quot;rating&quot;: &quot;SOME&quot;,
-  &quot;rationale&quot;: &quot;The response provides some context regarding the decision-making process, but it lacks a comprehensive explanation of the contemporaneous reasoning behind actions taken.&quot;,
-  &quot;evidence&quot;: [
-    {
-      &quot;id&quot;: &quot;Text p02_c01&quot;,
-      &quot;quote&quot;: &quot;Based on presenting symptoms of abdominal pain, vomiting and raised CRP - obstruction to be considered as a possible differential diagnosis.&quot;,
-      &quot;evidence_type&quot;: &quot;positive&quot;
-    },
-    {
-      &quot;id&quot;: &quot;Text p03_c01&quot;,
-      &quot;quote&quot;: &quot;There is no certainty that an earlier CT would have made a difference as we cannot determine at what point the patient perforated.&quot;,
-      &quot;evidence_type&quot;: &quot;negative&quot;
-    }
-  ],
-  &quot;uncertainty&quot;: true
-}</pre>
-            </details>
+            
           </div>
         </section>
         
@@ -615,7 +597,7 @@
 
           <div class="card-body">
             <h3>Rationale</h3>
-            <p>The response acknowledges uncertainty regarding the timing of the patient&#x27;s condition and the impact of actions taken.</p>
+            <p>The response acknowledges uncertainty regarding the impact of actions taken and the timing of events, demonstrating cautious counterfactual reasoning.</p>
 
             <h3>Evidence</h3>
             
@@ -624,38 +606,27 @@
                     <span class="pill" style="background:#007F3B">positive</span>
                     <span class="ev-id">Text p02_c01</span>
                   </div>
-                  <div class="ev-quote">“However, there was no certainty that surgery would be performed that very night if the patient was transferred earlier.”</div>
+                  <div class="ev-quote">“There is no certainty that an earlier CT would have made a difference”</div>
+                  <div class="ev-actions">
+                    <button class="btn" type="button" onclick='copyText("There is no certainty that an earlier CT would have made a difference")'>Copy quote</button>
+                    <a class="btn" target="lrrit_pdf_tab" href="file:///G:/My%20Drive/LLM%20projects/lrrit-llm/data/raw_pdfs/test.pdf#page=2">Open PDF (page 2)</a>
+                  </div>
                 </div>
                 
                 <div class="ev-row">
                   <div class="ev-meta">
                     <span class="pill" style="background:#007F3B">positive</span>
-                    <span class="ev-id">Text p03_c01</span>
+                    <span class="ev-id">Text p02_c01</span>
                   </div>
-                  <div class="ev-quote">“There is no certainty that an earlier CT would have made a difference as we cannot determine at what point the patient perforated.”</div>
+                  <div class="ev-quote">“However, there was no certainty that surgery would be performed that very night if the patient was transferred earlier.”</div>
+                  <div class="ev-actions">
+                    <button class="btn" type="button" onclick='copyText("However, there was no certainty that surgery would be performed that very night if the patient was transferred earlier.")'>Copy quote</button>
+                    <a class="btn" target="lrrit_pdf_tab" href="file:///G:/My%20Drive/LLM%20projects/lrrit-llm/data/raw_pdfs/test.pdf#page=2">Open PDF (page 2)</a>
+                  </div>
                 </div>
-                
+                <div class="muted">No more evidence quotes returned.</div>
 
-            <details class="raw">
-              <summary>Raw model output</summary>
-              <pre>{
-  &quot;rating&quot;: &quot;GOOD&quot;,
-  &quot;rationale&quot;: &quot;The response acknowledges uncertainty regarding the timing of the patient&#x27;s condition and the impact of actions taken.&quot;,
-  &quot;evidence&quot;: [
-    {
-      &quot;id&quot;: &quot;Text p02_c01&quot;,
-      &quot;quote&quot;: &quot;However, there was no certainty that surgery would be performed that very night if the patient was transferred earlier.&quot;,
-      &quot;evidence_type&quot;: &quot;positive&quot;
-    },
-    {
-      &quot;id&quot;: &quot;Text p03_c01&quot;,
-      &quot;quote&quot;: &quot;There is no certainty that an earlier CT would have made a difference as we cannot determine at what point the patient perforated.&quot;,
-      &quot;evidence_type&quot;: &quot;positive&quot;
-    }
-  ],
-  &quot;uncertainty&quot;: true
-}</pre>
-            </details>
+            
           </div>
         </section>
         
@@ -679,7 +650,7 @@
 
           <div class="card-body">
             <h3>Rationale</h3>
-            <p>The improvement actions show an attempt to address system issues but lack comprehensive monitoring and collaborative development details.</p>
+            <p>The improvement actions show an attempt to address system issues but lack comprehensive collaboration and monitoring details.</p>
 
             <h3>Evidence</h3>
             
@@ -689,24 +660,14 @@
                     <span class="ev-id">Text p03_c01</span>
                   </div>
                   <div class="ev-quote">“Link case to stream of work which is currently being done regarding the acutely surgical ill patients.”</div>
+                  <div class="ev-actions">
+                    <button class="btn" type="button" onclick='copyText("Link case to stream of work which is currently being done regarding the acutely surgical ill patients.")'>Copy quote</button>
+                    <a class="btn" target="lrrit_pdf_tab" href="file:///G:/My%20Drive/LLM%20projects/lrrit-llm/data/raw_pdfs/test.pdf#page=3">Open PDF (page 3)</a>
+                  </div>
                 </div>
-                
+                <div class="muted">No more evidence quotes returned.</div>
 
-            <details class="raw">
-              <summary>Raw model output</summary>
-              <pre>{
-  &quot;rating&quot;: &quot;SOME&quot;,
-  &quot;rationale&quot;: &quot;The improvement actions show an attempt to address system issues but lack comprehensive monitoring and collaborative development details.&quot;,
-  &quot;evidence&quot;: [
-    {
-      &quot;id&quot;: &quot;Text p03_c01&quot;,
-      &quot;quote&quot;: &quot;Link case to stream of work which is currently being done regarding the acutely surgical ill patients.&quot;,
-      &quot;evidence_type&quot;: &quot;positive&quot;
-    }
-  ],
-  &quot;uncertainty&quot;: true
-}</pre>
-            </details>
+            
           </div>
         </section>
         
@@ -740,6 +701,10 @@
                     <span class="ev-id">Text p03_c01</span>
                   </div>
                   <div class="ev-quote">“Delay in transferring from I but there is no certainty that this affected the outcome for the patient.”</div>
+                  <div class="ev-actions">
+                    <button class="btn" type="button" onclick='copyText("Delay in transferring from I but there is no certainty that this affected the outcome for the patient.")'>Copy quote</button>
+                    <a class="btn" target="lrrit_pdf_tab" href="file:///G:/My%20Drive/LLM%20projects/lrrit-llm/data/raw_pdfs/test.pdf#page=3">Open PDF (page 3)</a>
+                  </div>
                 </div>
                 
                 <div class="ev-row">
@@ -748,6 +713,10 @@
                     <span class="ev-id">Text p02_c01</span>
                   </div>
                   <div class="ev-quote">“No known systematic way to ensure that X-ray results are properly escalated for further review.”</div>
+                  <div class="ev-actions">
+                    <button class="btn" type="button" onclick='copyText("No known systematic way to ensure that X-ray results are properly escalated for further review.")'>Copy quote</button>
+                    <a class="btn" target="lrrit_pdf_tab" href="file:///G:/My%20Drive/LLM%20projects/lrrit-llm/data/raw_pdfs/test.pdf#page=2">Open PDF (page 2)</a>
+                  </div>
                 </div>
                 
                 <div class="ev-row">
@@ -756,38 +725,52 @@
                     <span class="ev-id">Text p01_c01</span>
                   </div>
                   <div class="ev-quote">“Appropriate investigations were ordered and performed.”</div>
+                  <div class="ev-actions">
+                    <button class="btn" type="button" onclick='copyText("Appropriate investigations were ordered and performed.")'>Copy quote</button>
+                    <a class="btn" target="lrrit_pdf_tab" href="file:///G:/My%20Drive/LLM%20projects/lrrit-llm/data/raw_pdfs/test.pdf#page=1">Open PDF (page 1)</a>
+                  </div>
                 </div>
-                
+                <div class="muted">No more evidence quotes returned.</div>
 
-            <details class="raw">
-              <summary>Raw model output</summary>
-              <pre>{
-  &quot;rating&quot;: &quot;SOME&quot;,
-  &quot;rationale&quot;: &quot;The report has a generally understandable structure but contains vague language and some jargon that affects clarity.&quot;,
-  &quot;evidence&quot;: [
-    {
-      &quot;id&quot;: &quot;Text p03_c01&quot;,
-      &quot;quote&quot;: &quot;Delay in transferring from I but there is no certainty that this affected the outcome for the patient.&quot;,
-      &quot;evidence_type&quot;: &quot;negative&quot;
-    },
-    {
-      &quot;id&quot;: &quot;Text p02_c01&quot;,
-      &quot;quote&quot;: &quot;No known systematic way to ensure that X-ray results are properly escalated for further review.&quot;,
-      &quot;evidence_type&quot;: &quot;negative&quot;
-    },
-    {
-      &quot;id&quot;: &quot;Text p01_c01&quot;,
-      &quot;quote&quot;: &quot;Appropriate investigations were ordered and performed.&quot;,
-      &quot;evidence_type&quot;: &quot;positive&quot;
-    }
-  ],
-  &quot;uncertainty&quot;: false
-}</pre>
-            </details>
+            
           </div>
         </section>
         
   </div>
+ <script>
+    let pdfWin = null;
+
+    function setPdfStatus(msg) {
+      const el = document.getElementById("pdf-status");
+      if (!el) return;
+      el.textContent = msg || "";
+      el.style.display = msg ? "block" : "none";
+    }
+
+    function openPdf(url) {
+      // Reuse a single named window/tab so repeated clicks don't spawn new tabs
+      const name = "lrrit_pdf_tab";
+
+      // If we already have a handle and it isn't closed, reuse it
+      if (pdfWin && !pdfWin.closed) {
+        pdfWin.location.href = url;
+        pdfWin.focus();
+        setPdfStatus("");  // clear any prior warning
+        return;
+      }
+
+      // Try to open (user gesture should allow this)
+      pdfWin = window.open(url, name, "noopener");
+
+      if (pdfWin) {
+        pdfWin.focus();
+        setPdfStatus("");
+      } else {
+        // Popup blocked: keep report tab, show an inline instruction
+        setPdfStatus("PDF tab blocked by browser. Please allow popups for this report, then click 'Open PDF' again.");
+      }
+    }
+</script>
 
   <script>
     // Keyboard accessibility for clickable summary rows

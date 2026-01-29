@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 import json
 import html
 from pathlib import Path
@@ -13,6 +14,24 @@ NHS_GREY = "#F3F2F1"
 NHS_RED = "#D5281B"
 NHS_AMBER = "#FFB81C"
 NHS_GREEN = "#007F3B"
+
+from pathlib import Path
+
+def _file_url(p: str) -> str:
+    # Produces a properly URL-encoded file:// URL (spaces handled)
+    return Path(p).resolve().as_uri()
+
+
+_PAGE_RE = re.compile(r"p(\d{1,3})", re.IGNORECASE)
+
+
+def _page_from_evidence_id(ev_id: str) -> int | None:
+    if not ev_id:
+        return None
+    m = _PAGE_RE.search(ev_id)
+    if not m:
+        return None
+    return int(m.group(1))
 
 
 def _badge_colour(value: str) -> str:
@@ -49,6 +68,15 @@ def render_html(report_dir: Path) -> Path:
         # Last resort: try env var (renderer is often run in same env as runner)
         import os
         model_name = (os.environ.get("OPENAI_MODEL") or "unknown").strip()
+    
+    pdf_url = None
+    meta = results.get("_meta", {}) if isinstance(results, dict) else {}
+    if isinstance(meta, dict):
+        if meta.get("pdf_url"):
+            pdf_url = meta["pdf_url"]
+        elif meta.get("pdf_path"):
+            pdf_url = _file_url(meta["pdf_path"])
+
 
     pack = None
     if pack_path.exists():
@@ -115,13 +143,34 @@ def render_html(report_dir: Path) -> Path:
         uncert_col = _badge_colour("YES" if uncertainty else "NO")
 
         # Evidence list
+        #pdf_url = meta.get("pdf_url") or meta.get("pdf_path") or os.environ.get("LRRIT_PDF_URL", "")
+
         ev_rows = []
         if evidence:
             for e in evidence:
                 eid = e.get("id", "")
                 quote = e.get("quote", "")
                 etype = e.get("evidence_type", "")
-                et_col = _badge_colour("GOOD" if etype == "positive" else "LITTLE" if etype == "negative" else "SOME")
+
+                et_col = _badge_colour(
+                    "GOOD" if etype == "positive"
+                    else "LITTLE" if etype == "negative"
+                    else "SOME"
+                )
+
+                page = _page_from_evidence_id(eid)
+
+                # Safe JS string for copy-to-clipboard
+                copy_payload = json.dumps(quote)
+
+                open_pdf_btn = ""
+                if pdf_url and page:
+                  pdf_href = f"{pdf_url}#page={page}"
+                  open_pdf_btn = (
+                      f'<a class="btn" target="lrrit_pdf_tab" href="{_esc(pdf_href)}">'
+                      f'Open PDF (page {page})</a>')
+                #print("DEBUG evidence:", eid, "page=", page, "pdf_url=", bool(pdf_url))
+                
                 ev_rows.append(f"""
                 <div class="ev-row">
                   <div class="ev-meta">
@@ -129,10 +178,15 @@ def render_html(report_dir: Path) -> Path:
                     <span class="ev-id">{_esc(eid)}</span>
                   </div>
                   <div class="ev-quote">“{_esc(quote)}”</div>
+                  <div class="ev-actions">
+                    <button class="btn" type="button" onclick='copyText({copy_payload})'>Copy quote</button>
+                    {open_pdf_btn}
+                  </div>
                 </div>
                 """)
-        else:
-            ev_rows.append('<div class="muted">No evidence quotes returned.</div>')
+            else:
+                ev_rows.append('<div class="muted">No more evidence quotes returned.</div>')
+
 
         anchor = f"dim-{_esc(agent_id).lower()}"
 
@@ -162,10 +216,7 @@ def render_html(report_dir: Path) -> Path:
             <h3>Evidence</h3>
             {''.join(ev_rows)}
 
-            <details class="raw">
-              <summary>Raw model output</summary>
-              <pre>{_esc(obj.get("raw_output",""))}</pre>
-            </details>
+            
           </div>
         </section>
         """)
@@ -328,6 +379,24 @@ def render_html(report_dir: Path) -> Path:
     .ev-quote {{
       font-size: 14px;
     }}
+    .ev-actions {{
+      margin-top: 8px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }}
+    .btn {{
+      border: 1px solid #ccc;
+      background: #fff;
+      padding: 6px 10px;
+      border-radius: 10px;
+      cursor: pointer;
+      text-decoration: none;
+      font-size: 0.9em;
+    }}
+    .btn:hover {{
+      background: #f5f5f5;
+    }}
     details.raw {{
       margin-top: 12px;
     }}
@@ -351,6 +420,20 @@ def render_html(report_dir: Path) -> Path:
     }}
   </style>
 </head>
+<script>
+    async function copyText(text) {{
+      try {{
+        await navigator.clipboard.writeText(text);
+      }} catch (e) {{
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        document.body.removeChild(ta);
+      }}
+    }}
+  </script>
 <body>
   <header>
     <div class="wrap">
@@ -368,8 +451,13 @@ def render_html(report_dir: Path) -> Path:
         <div><span class="k">Text chunks:</span> <span class="v">{chunk_count}</span></div>
         <div><span class="k">Tables:</span> <span class="v">{table_count}</span></div>
         <div><span class="k">Model:</span> <span class="v mono">{html.escape(model_name)}</span></div>
+        <div id="pdf-status" style="display:none; margin: 10px 0; padding: 10px; border: 1px solid #f0c36d; background: #fff8e1; border-radius: 10px;">
+          </div>
       </div>
-      <footer>Open this file locally in any browser. No data is uploaded anywhere.</footer>
+      <footer>This file is stored locally. No data is uploaded anywhere. <p>NB. The <b>copy quote</b> button copies the text of the quote to the clipboard. 
+      The <b>open pdf</b> button opens the original PDF in a new tab. <p>You can then use Ctrl+F, Ctrl+V to search for the quote within the report. 
+      Note that long quotes may be split across lines or the model may have added punctuation or changed the formatting. 
+      In this case, delete parts of the quote until it works. </footer>
     </div>
 
     <div class="summary" id="summary">
@@ -392,6 +480,40 @@ def render_html(report_dir: Path) -> Path:
 
     {''.join(cards_html)}
   </div>
+ <script>
+    let pdfWin = null;
+
+    function setPdfStatus(msg) {{
+      const el = document.getElementById("pdf-status");
+      if (!el) return;
+      el.textContent = msg || "";
+      el.style.display = msg ? "block" : "none";
+    }}
+
+    function openPdf(url) {{
+      // Reuse a single named window/tab so repeated clicks don't spawn new tabs
+      const name = "lrrit_pdf_tab";
+
+      // If we already have a handle and it isn't closed, reuse it
+      if (pdfWin && !pdfWin.closed) {{
+        pdfWin.location.href = url;
+        pdfWin.focus();
+        setPdfStatus("");  // clear any prior warning
+        return;
+      }}
+
+      // Try to open (user gesture should allow this)
+      pdfWin = window.open(url, name, "noopener");
+
+      if (pdfWin) {{
+        pdfWin.focus();
+        setPdfStatus("");
+      }} else {{
+        // Popup blocked: keep report tab, show an inline instruction
+        setPdfStatus("PDF tab blocked by browser. Please allow popups for this report, then click 'Open PDF' again.");
+      }}
+    }}
+</script>
 
   <script>
     // Keyboard accessibility for clickable summary rows
@@ -407,7 +529,6 @@ def render_html(report_dir: Path) -> Path:
 </body>
 </html>
 """
-
     out_path = report_dir / "agent_results.html"
     out_path.write_text(html_out, encoding="utf-8")
     return out_path
