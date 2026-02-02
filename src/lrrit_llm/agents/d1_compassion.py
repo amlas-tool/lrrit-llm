@@ -70,12 +70,14 @@ class D1CompassionAgent:
 
         for chunk in pack.text_chunks:
             evidence_blocks.append(
-                f"[Text {chunk.chunk_id} | page {chunk.provenance.page}]\n"
-                f"{chunk.text}"
+                f"[Text {chunk.chunk_id} | page {chunk.provenance.page}]\n{chunk.text}"
             )
 
         for table in pack.tables:
-            evidence_blocks.append(table.text_fallback)
+            # Ensure tables are citeable by a stable ID and contain fallback text
+            evidence_blocks.append(
+                f"[Table {table.table_id} | page {table.provenance.page}]\n{table.text_fallback}"
+            )
 
         evidence_text = "\n\n".join(evidence_blocks)
 

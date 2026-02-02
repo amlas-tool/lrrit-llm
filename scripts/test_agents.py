@@ -19,6 +19,9 @@ from lrrit_llm.agents.d6_counterfactuals import D6HindsightBiasAgent
 from lrrit_llm.agents.d7_actions import D7ImprovementActionsAgent
 from lrrit_llm.agents.d8_clarity import D8CommunicationQualityAgent
 
+from lrrit_llm.laj.laj_meta import LaJMetaEvaluator
+from lrrit_llm.laj.dimension_defs import DIMENSION_DEFS
+
 
 def main():
     # ---- CONFIG ----
@@ -105,6 +108,33 @@ def main():
     )
 
     print(f"Saved agent results: {results_path}")
+
+    print(f"Running LaJ meta-evaluation on {results_path}")
+
+    laj = LaJMetaEvaluator(client)
+
+    laj_results = {}
+
+    for key, agent_out in results.items():
+        if not isinstance(agent_out, dict): 
+            continue
+        agent_id = agent_out.get("agent_id", "").strip()
+        if agent_id in DIMENSION_DEFS:
+            laj_results[agent_id.lower()] = laj.run(
+                pack=pack,
+                agent_output=agent_out,
+                dimension_definition=DIMENSION_DEFS[agent_id],
+                strict_quote_check=True,
+            )
+
+    #results["laj"] = laj_results
+
+    laj_results_path = out_dir / "laj_results.json"
+    laj_results_path.write_text(
+    json.dumps(laj_results, ensure_ascii=False, indent=2),
+    encoding="utf-8",
+    )
+
 
 
 if __name__ == "__main__":
