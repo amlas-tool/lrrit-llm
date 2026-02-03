@@ -42,8 +42,10 @@ NB. This codebase is intended for **research, prototyping, and governance evalua
 3. **Dimension-specific agents**
    - Each agent evaluates one LRRIT dimension only
    - Agents return structured JSON with ratings, rationale, evidence quotes, and uncertainty
+   - Each agent is judged by the LLM using metrics for task evaluation to prevent hallucination, errors, misalignment, etc.
 4. **Presentation**
    - Results rendered as static HTML for human review
+   - Dynamic drop down allows user to drill down into detail for evaluation metrics.
 
 ---
 
@@ -212,7 +214,8 @@ py .\scripts\render_results_html.py
 ```
 A full example can be found here: https://raw.githack.com/amlas-tool/lrrit-llm/main/data/processed/reports/test/agent_results.html
 
-<img width="1516" height="1760" alt="image" src="https://github.com/user-attachments/assets/22333fe3-7b8f-44bf-beba-adbfadfc72a7" />
+<img width="1505" height="1839" alt="image" src="https://github.com/user-attachments/assets/91287a40-661e-4c43-aeca-5a7ff5b189d4" />
+
 
 
 
