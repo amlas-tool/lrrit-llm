@@ -42,8 +42,10 @@ NB. This codebase is intended for **research, prototyping, and governance evalua
 3. **Dimension-specific agents**
    - Each agent evaluates one LRRIT dimension only
    - Agents return structured JSON with ratings, rationale, evidence quotes, and uncertainty
+   - Each agent is judged by the LLM using metrics for task evaluation to prevent hallucination, errors, misalignment, etc.
 4. **Presentation**
    - Results rendered as static HTML for human review
+   - Dynamic drop down allows user to drill down into detail for evaluation metrics.
 
 ---
 
