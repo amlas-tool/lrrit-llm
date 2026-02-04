@@ -144,6 +144,8 @@ Implemented data dimension agents:
 | D7 | Safety actions / recommendations|
 | D8 | Communication quality and usability of the learning response|
 
+---
+
 ### Evidence polarity
 Each evidence item is labelled as:
 
