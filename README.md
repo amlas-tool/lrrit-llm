@@ -1,4 +1,4 @@
-# LRRIT-LLM
+# LRRIT – LLM Agentic Prototype
 **Learning Response Review and Improvement Tool – LLM Agentic Prototype**
 
 This repository contains a prototype **agentic framework** for applying Large Language Models (LLMs) to the *Learning Response Review and Improvement Tool (LRRIT)* used in healthcare safety governance.
