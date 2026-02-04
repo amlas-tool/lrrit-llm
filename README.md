@@ -42,7 +42,8 @@ NB. This codebase is intended for **research, prototyping, and governance evalua
 3. **Dimension-specific agents**
    - Each agent evaluates one LRRIT dimension only
    - Agents return structured JSON with ratings, rationale, evidence quotes, and uncertainty
-   - Each agent is judged by the LLM using metrics for task evaluation to prevent hallucination, errors, misalignment, etc.
+   - Each agent is assessed for its performance by the LLM (LLM-as-Judge or LaJ), using a basket of metrics for task evaluation to reduce the risk of hallucination, errors, misalignment etc. by the agents.
+     - *NB. The LaJ does not assess the agents against the report, it assesses them against the rubric and the verbatim evidence retrieved by the agent.*
 4. **Presentation**
    - Results rendered as static HTML for human review
    - Dynamic drop down allows user to drill down into detail for evaluation metrics.
@@ -248,7 +249,8 @@ A full example can be found here: https://raw.githack.com/amlas-tool/lrrit-llm/m
 - ✔ EvidencePack ingestion stable (text + optional tables)
 - ✔ D1–D8 agents implemented and calibrated
 - ✔ HTML presentation layer
-- ✔ LLM-as-Judge (LaJ) meta-evaluation layer 
+- ✔ LLM-as-Judge (LaJ) meta-evaluation layer
+- ⏳ Feature extraction for complexity analysis (planned)
 - ⏳ Human–LLM comparison tooling (planned)
 
 ---
