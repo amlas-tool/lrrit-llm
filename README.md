@@ -160,12 +160,14 @@ The `uncertainty` flag is used to flag the need for human review. It can be trig
 
 ---
 
-### LaJ evaluation metrics
+## LaJ evaluation metrics
 The LLM-as-judge or LaJ asesses how well the agents have performed their task. It tries to see if the evidence they cite and their rationale could be erroneous, hallucinated or incoherent / misaligned. 
 
-It does not judge the outputs against the report in question. Below are a basket of metrics that are currently unweighted. However, we may weight them to give us a combined single grade as a confidence metric. 
+*It does not judge the agent outputs against the report in question.*
 
-## Metric basket
+Below are a basket of metrics that are currently unweighted. However, we may weight them to give us a combined single grade as a confidence metric. 
+
+### LaJ metric basket
 1. Rubric Fidelity
    - Does the rationale address the intended LRRIT judgement criteria for the dimension?
 2. Evidence Grounding
@@ -178,6 +180,13 @@ It does not judge the outputs against the report in question. Below are a basket
    - Is uncertainty signalled appropriately for mixed/ambiguous evidence?
 6. Hallucination Screening (agent-output level)
    - Does the rationale introduce claims not supported by the supplied excerpts?
+  
+The LaJ grades each of these metrics as follows
+- PASS: clearly meets the metric
+- WARN: partially meets; minor gaps
+- FAIL: materially fails; unreliable
+
+It assigns an overall grade to the agent's performance based on the same grades. However, this may change if we introduce weights into the metrics (especially no. 2 and 6).
 
 ## Installation
 
