@@ -156,6 +156,25 @@ The `uncertainty` flag is used to flag the need for human review. It can be trig
 
 ---
 
+### LaJ evaluation metrics
+The LLM-as-judge or LaJ asesses how well the agents have performed their task. It tries to see if the evidence they cite and their rationale could be erroneous, hallucinated or incoherent / misaligned. 
+
+It does not judge the outputs against the report in question. Below are a basket of metrics that are currently unweighted. However, we may weight them to give us a combined single grade as a confidence metric. 
+
+## Metric basket
+1. Rubric Fidelity
+   - Does the rationale address the intended LRRIT judgement criteria for the dimension?
+2. Evidence Grounding
+   - Are claims in the rationale supported by the cited excerpts?
+3. Reasoning Quality & Internal Coherence
+   - Does the rationale logically support the rating without generic/circular statements?
+4. Values Alignment (PSIRF/LRRIT)
+   - Does the rationale reflect PSIRF/LRRIT values (systems thinking, compassion, local rationality, avoid blame/counterfactual misuse)?
+5. Transparency & Uncertainty Handling
+   - Is uncertainty signalled appropriately for mixed/ambiguous evidence?
+6. Hallucination Screening (agent-output level)
+   - Does the rationale introduce claims not supported by the supplied excerpts?
+
 ## Installation
 
 Python **3.10+** recommended.
